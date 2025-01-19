@@ -28,8 +28,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "MultiFunctionShield.h"
-extern TIM_HandleTypeDef htim3;  // Points to the timer structure   Timer3 is the Reaction Timer
-extern void MX_TIM3_Init(void);	// To reset the timer
+extern TIM_HandleTypeDef htim6;  // Points to the timer structure   Timer6 is the Reaction Timer
+extern void MX_TIM6_Init(void);	// To reset the timer
 extern bool got_start_button;
 extern bool got_stop_button;
 extern bool got_fastest_button;
@@ -67,10 +67,11 @@ void got_start()
 		rand_millisec =  rand() % upper_limit_millisec_to_wait;
 
 	  /**************** STUDENT TO FILL IN START HERE ********************/
-		// Step 1
-		// Step 2
-		// Step 3
-		// Step 4
+		Display_Waiting(); // Step 1 Display the Waiting "----"
+
+		HAL_Delay(rand_millisec); // Step 2 Wait for a random number of millisec's
+		Display_All();// Step 3 Turn on all the 7-Seg lights (that's "GO"
+		HAL_TIM_Base_Start_IT(&htim6); // Step 4  Start the Reaction timer.
 	  /**************** STUDENT TO FILL IN END  HERE ********************/
 	}
 void got_stop()
@@ -86,12 +87,13 @@ void got_stop()
 
 	  /**************** STUDENT TO FILL IN START HERE ********************/
       // 1.) Stop the random timer // Random timer is timer3
+	    HAL_TIM_Base_Stop(&htim6);
 
       // 2.) Read the value of the timer -- this step provided
-		last_reaction_time_in_millisec = __HAL_TIM_GetCounter(&htim3) / 10; // Why is it divide by 10?
+		last_reaction_time_in_millisec = __HAL_TIM_GetCounter(&htim6) / 10; // Why is it divide by 10?
 
 	  // 3.) Display the value
-
+		MultiFunctionShield_Display(last_reaction_time_in_millisec);
 
       /**************** STUDENT TO FILL IN END HERE ********************/
 		// Keep the best time in a global variable
